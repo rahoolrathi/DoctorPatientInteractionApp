@@ -1,10 +1,10 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Cproject.Models;
 
 namespace Cproject.Controllers;
 
-public class HomeController : Controller
+[ApiController]
+[Route("api/[controller]")]
+public class HomeController : ControllerBase
 {
     private readonly ILogger<HomeController> _logger;
 
@@ -13,19 +13,22 @@ public class HomeController : Controller
         _logger = logger;
     }
 
+    [HttpGet("index")]
     public IActionResult Index()
     {
-        return View();
+        return Ok(new { Message = "Welcome to the API!" });
     }
 
+    [HttpGet("privacy")]
     public IActionResult Privacy()
     {
-        return View();
+        return Ok(new { Message = "Privacy endpoint not implemented." });
     }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    [HttpGet("error")]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        _logger.LogError("An error occurred.");
+        return Problem(detail: "An error occurred.", statusCode: 500);
     }
 }
